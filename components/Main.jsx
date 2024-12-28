@@ -15,7 +15,7 @@ export function Main() {
   }, []);
 
   return (
-    <View style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
+    <View>
       {clases.length === 0 ? (
         <ActivityIndicator color={"#a9a9a9"} size={"large"} />
       ) : (

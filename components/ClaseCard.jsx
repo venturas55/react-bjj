@@ -19,9 +19,7 @@ const ClaseCard = ({ clase }) => {
           {/* <Text>Duración: {clase.duracion} min</Text> */}
           <View style={styles.asistentesContainer}>
             {clase.asistentes.map((asistente, index) => (
-              <>
-                <Avatar key={index} id={asistente.usuario_id} />
-              </>
+              <Avatar key={index} id={asistente.usuario_id} />
             ))}
           </View>
         </View>

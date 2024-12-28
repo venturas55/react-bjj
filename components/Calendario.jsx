@@ -5,8 +5,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  ScrollView,
 } from "react-native";
 import ClaseCard from "./ClaseCard"; // Import the AnimatedClaseCard component
+import theme from "./theme";
+import { getClases, getUsuario, getUsuarioPicture } from "../lib/bjj"; // Import the getClases function
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -20,13 +23,8 @@ const Calendar = () => {
   useEffect(() => {
     // Fetch inicial para obtener todas las clases
     const fetchClasses = async () => {
-      try {
-        const response = await fetch("http://adriandeharo.es:7001/api/clases");
-        const data = await response.json();
-        setClasses(data);
-      } catch (error) {
-        console.error("Error fetching classes:", error);
-      }
+      const response = await getClases();
+      setClasses(response);
     };
 
     fetchClasses();
@@ -113,68 +111,68 @@ const Calendar = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Encabezado del calendario */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigateMonth(-1)}>
-          <Text style={styles.navButton}>{"<"}</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>
-          {currentDate.toLocaleString("default", { month: "long" })}{" "}
-          {currentDate.getFullYear()}
-        </Text>
-        <TouchableOpacity onPress={() => navigateMonth(1)}>
-          <Text style={styles.navButton}>{">"}</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Días de la semana */}
-      <View style={styles.weekRow}>
-        {daysOfWeek.map((day, index) => (
-          <Text key={index} style={styles.weekDay}>
-            {day}
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
+        {/* Encabezado del calendario */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigateMonth(-1)}>
+            <Text style={styles.navButton}>{"<"}</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerText}>
+            {currentDate.toLocaleString("default", { month: "long" })}{" "}
+            {currentDate.getFullYear()}
           </Text>
-        ))}
+          <TouchableOpacity onPress={() => navigateMonth(1)}>
+            <Text style={styles.navButton}>{">"}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Días de la semana */}
+        <View style={styles.weekRow}>
+          {daysOfWeek.map((day, index) => (
+            <Text key={index} style={styles.weekDay}>
+              {day}
+            </Text>
+          ))}
+        </View>
+
+        {/* Días del calendario */}
+        <FlatList
+          data={calendarDays}
+          keyExtractor={(item) => item.toISOString()}
+          renderItem={renderDay}
+          numColumns={7}
+          scrollEnabled={false}
+          style={styles.calendarGrid}
+        />
+
+        {/* Mostrar las clases para el día seleccionado */}
+        <FlatList
+          data={calendarClasses}
+          keyExtractor={(item) => item.clase_id.toString()}
+          renderItem={({ item, index }) => (
+            <ClaseCard clase={item} index={index} />
+          )}
+          ListEmptyComponent={
+            <Text style={styles.noClassesText}>
+              {selectedDate
+                ? "No hay clases para este día."
+                : "Selecciona un día."}
+            </Text>
+          }
+        />
       </View>
-
-      {/* Días del calendario */}
-      <FlatList
-        data={calendarDays}
-        keyExtractor={(item) => item.toISOString()}
-        renderItem={renderDay}
-        numColumns={7}
-        scrollEnabled={false}
-        style={styles.calendarGrid}
-      />
-
-      {/* Mostrar las clases para el día seleccionado */}
-      <FlatList
-        data={calendarClasses}
-        keyExtractor={(item) => item.clase_id.toString()}
-        renderItem={({ item, index }) => (
-          <ClaseCard clase={item} index={index} />
-        )}
-        ListEmptyComponent={
-          <Text style={styles.noClassesText}>
-            {selectedDate
-              ? "No hay clases para este día."
-              : "Selecciona un día."}
-          </Text>
-        }
-      />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+    padding: 2,
     backgroundColor: "#f9f9f9",
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
   },
@@ -214,7 +212,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
   },
   selectedDay: {
-    backgroundColor: "#007BFF",
+    backgroundColor: theme.selected.primary,
     borderRadius: 25,
   },
   dayText: {

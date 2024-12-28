@@ -1,21 +1,26 @@
 import { Stack } from "expo-router";
 import { View } from "react-native";
 import AppBar from "../components/AppBar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../global.css";
 
-export default function Layour() {
+export default function Layout() {
   return (
-    <View>
+    <SafeAreaProvider>
       <Stack
         screenOptions={{
-          HeaderStyle: { backgroundColor: "#222" },
+          headerStyle: {
+            backgroundColor: "#f45dde",
+          },
           headerTintColor: "#fff",
-          headerTitleStyle: "",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
         }}
-      />
-      <View>
-        <AppBar />
-      </View>
-    </View>
+      >
+        {/* Optionally configure static options outside the route.*/}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </SafeAreaProvider>
   );
 }

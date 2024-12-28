@@ -7,11 +7,11 @@ import theme from "./theme";
 const styles = StyleSheet.create({
   appBar: {
     flexDirection: "row",
-    height: 40,
+    height: 80,
     backgroundColor: theme.appBar.primary,
     paddingBottom: Constants.statusBarHeight + 5,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "top",
     gap: 15,
   },
   text: {

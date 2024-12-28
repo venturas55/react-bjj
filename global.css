@@ -8,7 +8,7 @@
   }
   
   @font-face {
-    src: url(/node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf);
+    src: url(./node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf);
     font-family: "FontAwesome";
   }
   
@@ -46,6 +46,27 @@
   @font-face {
     src: url(/node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf);
     font-family: "MaterialCommunityIcons";
+  }
+
+  @font-face {
+    src: url(/node_modules/react-native-vector-icons/Fonts/FontAwesome6_Brands.ttf);
+    font-family: "FontAwesome6_Brands";
+    font-weight: 400; /* Regular weight */
+    font-style: normal;
+  }
+  
+  @font-face {
+    src: url(/node_modules/react-native-vector-icons/Fonts/FontAwesome6_Regular.ttf);
+    font-family: "FontAwesome6_Regular";
+    font-weight: 400; /* Regular weight */
+    font-style: normal;
+  }
+
+  @font-face {
+    src: url(/node_modules/react-native-vector-icons/Fonts/FontAwesome6_Solid.ttf);
+    font-family: "FontAwesome6_Solid";
+    font-weight: 900; /* Bold weight for solid */
+    font-style: normal;
   }
   
   /* TODO: Add other icons fonts here */

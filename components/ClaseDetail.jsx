@@ -1,5 +1,5 @@
 import Avatar from "./Avatar";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import moment from "moment";
 import { format } from "date-fns";
 import BeltComponent from "./BeltComponent";
@@ -49,10 +49,17 @@ const ClaseDetail = ({ clase }) => {
                   <BeltComponent
                     cinturon={asistente.cinturon}
                     grados={asistente.grado}
-                    id={asistente.grado}
+                    id={asistente.asistencia_id}
                     tamano="pequeño"
                   />
                 </View>
+                <Pressable>
+                  {asistente.asistencia ? (
+                    <Text>Asistió</Text>
+                  ) : (
+                    <Text>Faltó</Text>
+                  )}
+                </Pressable>
               </View>
             ))
           ) : (
