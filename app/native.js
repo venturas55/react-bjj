@@ -1,13 +1,12 @@
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Main } from "../components/Main";
 import { View, StyleSheet } from "react-native";
-import "./../global.css";
+import Native from "../pages/native";
 
 export default function Index() {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <Main />
+        <Native />
       </View>
     </SafeAreaProvider>
   );

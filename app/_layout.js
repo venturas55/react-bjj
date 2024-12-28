@@ -1,18 +1,21 @@
 import { Stack } from "expo-router";
-import { View, Text } from "react-native";
-/* import "../global.css"; */
-import Logo from "../components/Logo"; // Adjust the import path as necessary
+import { View } from "react-native";
+import AppBar from "../components/AppBar";
+import "../global.css";
 
 export default function Layour() {
   return (
-    <View className="flex-1 bg-black">
+    <View>
       <Stack
         screenOptions={{
-          HeaderStyle: { backgroundColor: "#000" },
+          HeaderStyle: { backgroundColor: "#222" },
           headerTintColor: "#fff",
           headerTitleStyle: "",
         }}
       />
+      <View>
+        <AppBar />
+      </View>
     </View>
   );
 }

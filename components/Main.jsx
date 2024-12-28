@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link } from "expo-router";
 import { View, ActivityIndicator } from "react-native";
 import { getClases } from "../lib/bjj";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Logo } from "./Logo";
-import AppBar from "./AppBar";
 import Calendario from "./Calendario";
 
 export function Main() {
@@ -13,7 +10,6 @@ export function Main() {
 
   useEffect(() => {
     getClases().then((clases) => {
-      //console.log(clases);
       setClases(clases);
     });
   }, []);
@@ -21,13 +17,11 @@ export function Main() {
   return (
     <View style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
       {clases.length === 0 ? (
-        <ActivityIndicator color={"#fff"} size={"large"} />
+        <ActivityIndicator color={"#a9a9a9"} size={"large"} />
       ) : (
         <Calendario clases={clases} />
       )}
-      <View style={{ marginTop: 20 }}>
-        <AppBar />
-      </View>
+      <View style={{ marginBottom: 20 }}></View>
     </View>
   );
 }

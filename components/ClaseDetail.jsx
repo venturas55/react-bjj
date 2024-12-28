@@ -1,45 +1,49 @@
-import { useEffect, useRef } from "react";
 import Avatar from "./Avatar";
-import { View, Text, StyleSheet, Animated, Pressable } from "react-native";
-import { Link } from "expo-router";
+import { View, Text, StyleSheet } from "react-native";
 import moment from "moment";
 import { format } from "date-fns";
 import BeltComponent from "./BeltComponent";
 
 const ClaseDetail = ({ clase }) => {
   return (
-    <>
+    <View>
       <View>
-        <View style={styles.tittle}>
+        <Text style={styles.tittle}>
+          Clase {clase.clase_id}
           {format(new Date(moment(clase.fecha_hora).toISOString()), "dd MMMM")}
+        </Text>
+      </View>
+      <View style={styles.card}>
+        <View style={styles.instructor}>
+          <Avatar id={clase.instructor_id} />
+          <Text>{clase.nombre_instructor}</Text>
         </View>
-        <View style={styles.card}>
-          <View style={styles.instructor}>
-            <Avatar id={clase.instructor_id} />
-            <Text>{clase.nombre_instructor}</Text>
-          </View>
-          <View style={styles.actividad}>
-            <Text>
-              {" "}
-              {clase.clase_id} {clase.nombre_actividad}{" "}
-            </Text>
-            <Text>
-              {format(
-                new Date(moment(clase.fecha_hora).toISOString()),
-                "HH:mm",
-              )}
-              {" duración "}
-              {clase.duracion} min
-            </Text>
-          </View>
+        <View style={styles.actividad}>
+          <Text>
+            {" "}
+            {clase.clase_id} {clase.nombre_actividad}{" "}
+          </Text>
+          <Text>
+            {format(new Date(moment(clase.fecha_hora).toISOString()), "HH:mm")}
+            {" duración "}
+            {clase.duracion} min
+          </Text>
         </View>
-        <Text>{clase.descripcion_actividad}</Text>
-        <View style={styles.asistentesContainer}>
+      </View>
+
+      <Text className="text-blue-400">{clase.descripcion_actividad}</Text>
+
+      <View style={styles.asistentesContainer}>
+        {clase?.asistentes?.length > 0 ? (
           <Text>Asistentes: {clase.asistentes.length}</Text>
-          <View style={styles.asistentesContainer}>
-            {clase.asistentes.map((asistente, index) => (
-              <View style={styles.asistente}>
-                <Avatar key={index} id={asistente.usuario_id} />
+        ) : (
+          <Text>No hay asistentes</Text>
+        )}
+        <View style={styles.asistentesContainer}>
+          {clase?.asistentes?.length > 0 ? (
+            clase.asistentes.map((asistente, index) => (
+              <View key={index} style={styles.asistente}>
+                <Avatar id={asistente.usuario_id} />
                 <Text>{asistente.nombre_usuario}</Text>
                 <View style={styles.belt}>
                   <BeltComponent
@@ -50,11 +54,13 @@ const ClaseDetail = ({ clase }) => {
                   />
                 </View>
               </View>
-            ))}
-          </View>
+            ))
+          ) : (
+            <Text>No hay asistentes</Text>
+          )}
         </View>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -85,21 +91,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   asistentesContainer: {
+    flexDirection: "column",
     flexWrap: "wrap",
     marginTop: 8,
     marginBottom: 12,
   },
   asistente: {
     flexDirection: "row",
-    marginHorizontal: 5,
-    marginBottom: 8,
+    marginHorizontal: 20,
+    marginBottom: 10,
     alignItems: "center",
   },
   belt: {
     flexGrow: 1,
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginRight: 10,
+    marginRight: 18,
   },
 });
 
