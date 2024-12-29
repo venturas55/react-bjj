@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated, Pressable } from "react-native";
 import { format } from "date-fns";
 import { Link } from "expo-router";
-import Avatar from "./../components/Avatar";
+import Avatar from "./Avatar";
 
 const ClaseCard = ({ clase }) => {
   const formattedDate = format(new Date(clase.fecha_hora), "dd/MM/yyyy");

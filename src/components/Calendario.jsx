@@ -9,26 +9,19 @@ import {
 } from "react-native";
 import ClaseCard from "./ClaseCard"; // Import the AnimatedClaseCard component
 import theme from "./theme";
-import { getClases, getUsuario, getUsuarioPicture } from "../lib/bjj"; // Import the getClases function
+import useClases from "../hooks/useClases.js";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
-  const [classes, setClasses] = useState([]); // Estado para almacenar las clases
   const [calendarClasses, setCalendarClasses] = useState([]); // Clases filtradas para la fecha seleccionada
+  const clases = useClases()._j;
+  //console.log("voy");
+  //console.log(JSON.stringify(clases).substring(0, 200));
+  console.log(clases);
 
   // Obtener el nombre de los días de la semana
   const daysOfWeek = ["L", "M", "X", "J", "V", "S", "D"];
-
-  useEffect(() => {
-    // Fetch inicial para obtener todas las clases
-    const fetchClasses = async () => {
-      const response = await getClases();
-      setClasses(response);
-    };
-
-    fetchClasses();
-  }, []);
 
   // Generar los días del mes
   const generateCalendarDays = (date) => {
@@ -78,7 +71,7 @@ const Calendar = () => {
     setSelectedDate(date);
 
     // Filtrar clases para la fecha seleccionada
-    const selectedClasses = classes.filter((clase) => {
+    const selectedClasses = clases.filter((clase) => {
       const claseDate = new Date(clase.fecha_hora);
       return (
         claseDate.getFullYear() === date.getFullYear() &&
