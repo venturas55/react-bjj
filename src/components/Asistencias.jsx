@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import React from "react";
 import useUsuario from "../hooks/useUsuario";
-import { FlatList } from "react-native-web";
+import AsistenciaItem from "./AsistenciaItem";
+import { format } from "date-fns";
 
 const Asistencias = (user) => {
   const usuario = useUsuario("1");
@@ -11,9 +12,14 @@ const Asistencias = (user) => {
       <View style={styles.usuario}>
         {usuario ? (
           <>
-            <Text>{usuario.nombre}</Text>
-            <Text>{usuario.apellidos}</Text>
-            <Text>{usuario.fecha_nacimiento}</Text>
+            <Text>
+              {usuario.nombre} {usuario.apellidos}
+            </Text>
+            <Text></Text>
+            <Text>
+              Nacimiento:
+              {format(new Date(usuario.fecha_nacimiento), " dd/MM/yyyy")}
+            </Text>
             <Text>{usuario.pais}</Text>
             <Text>{usuario.telefono}</Text>
             <Text>{usuario.cinturon}</Text>
@@ -23,17 +29,18 @@ const Asistencias = (user) => {
           <Text>Recibiendo datos</Text>
         )}
       </View>
-      <View style={styles.asistencias}>
-        {usuario?.asistencias?.length > 0 ? (
-          usuario.asistencias.map((asistencia, index) => (
-            <View key={index} style={styles.asistencia}>
-              <Text>{asistencia.asistencia_id}</Text>
-            </View>
-          ))
-        ) : (
-          <Text>No hay asistencias</Text>
+
+      <FlatList
+        data={usuario?.asistencias}
+        keyExtractor={(item) => item.asistencia_id.toString()}
+        renderItem={({ item, index }) => (
+          <AsistenciaItem asistencia={item} index={index} />
         )}
-      </View>
+        ListEmptyComponent={
+          <Text style={styles.noClassesText}>No hay clases para este día</Text>
+        }
+        style={styles.asistencias}
+      />
     </View>
   );
 };
@@ -49,11 +56,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingVertical: 16,
   },
   asistencias: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
 
