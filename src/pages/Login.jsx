@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View, TextInput, Button, StyleSheet } from "react-native";
 import { useForm, Controller } from "react-hook-form";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -29,11 +30,40 @@ export default function LogInPage() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      usuario: "",
+      contrasena: "",
     },
   });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    console.log(data);
+    const { usuario, contrasena } = data;
+    try {
+      const response = await fetch("http://adriandeharo.es:7001/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ usuario, contrasena }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Usuario o contraseña incorrectos");
+      }
+
+      const data = await response.json();
+
+      const { token, user } = data;
+      // Guardar token en AsyncStorage
+      await AsyncStorage.setItem("authToken", token);
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      //console.log("Token: ", token);
+      console.log("Usuario autenticado:", user);
+      return user;
+    } catch (error) {
+      console.error("Error durante el login:", error.message);
+      throw error;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -44,15 +74,15 @@ export default function LogInPage() {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            placeholder="First name"
+            placeholder="Usuario"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
           />
         )}
-        name="firstName"
+        name="usuario"
       />
-      {errors.firstName && <Text>This is required.</Text>}
+      {errors.usuario && <Text>This is required.</Text>}
 
       <Controller
         styles={styles.campo}
@@ -62,13 +92,13 @@ export default function LogInPage() {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            placeholder="Last name"
+            placeholder="Contraseña"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
           />
         )}
-        name="lastName"
+        name="contrasena"
       />
 
       <Button

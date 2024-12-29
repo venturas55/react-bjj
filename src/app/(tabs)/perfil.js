@@ -1,10 +1,21 @@
-import { View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import Perfil from "../../components/Perfil";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Perfil user={{ null: "a" }} />
+      {async () => {
+        const user = await AsyncStorage.getItem("user").json();
+        user ? (
+          <>
+            <Text> Usuario{user.usuario} </Text>;
+            <Perfil user={{ user }} />;
+          </>
+        ) : (
+          <Text>Recibiendo datos</Text>
+        );
+      }}
     </View>
   );
 }
