@@ -15,10 +15,7 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [calendarClasses, setCalendarClasses] = useState([]); // Clases filtradas para la fecha seleccionada
-  const clases = useClases()._j;
-  //console.log("voy");
-  //console.log(JSON.stringify(clases).substring(0, 200));
-  console.log(clases);
+  const clases = useClases();
 
   // Obtener el nombre de los días de la semana
   const daysOfWeek = ["L", "M", "X", "J", "V", "S", "D"];

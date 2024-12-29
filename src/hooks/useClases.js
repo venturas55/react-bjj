@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-const useClases = async () => {
-  const [clases, setClases] = useState([]); // Estado para almacenar las clases
+const useClases = () => {
+  const [clases, setClases] = useState(null); // Estado para almacenar las clases
 
   const fetchClases = async () => {
     // eslint-disable-next-line prettier/prettier
@@ -12,6 +12,7 @@ const useClases = async () => {
   useEffect(() => {
     fetchClases();
   }, []);
+
   return clases;
 };
 

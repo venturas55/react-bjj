@@ -1,22 +1,11 @@
 import { View, Text, Image, StyleSheet } from "react-native";
-import React, { useState, useEffect } from "react";
-import { getUsuario } from "../lib/bjj";
+import React from "react";
 import BeltComponent from "./BeltComponent";
+import useUsuario from "../hooks/useUsuario";
 
 const Perfil = (user) => {
-  const [usuario, setUsuario] = useState([]); // Estado para almacenar las clases
+  const usuario = useUsuario(1); // Estado para almacenar las clases
 
-  // Obtener el nombre de los días de la semana
-  useEffect(() => {
-    // Fetch inicial para obtener todas las clases
-    const fetchUser = async () => {
-      const response = await getUsuario(1);
-      //console.log(response);
-      await setUsuario(response);
-    };
-
-    fetchUser();
-  }, []);
   return (
     <View style={styles.container}>
       <Image
