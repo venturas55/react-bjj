@@ -35,7 +35,6 @@ export default function LogInPage() {
     },
   });
   const onSubmit = async (data) => {
-    console.log(data);
     const { usuario, contrasena } = data;
     try {
       const response = await fetch("http://adriandeharo.es:7001/api/login", {
@@ -55,9 +54,10 @@ export default function LogInPage() {
       const { token, user } = data;
       // Guardar token en AsyncStorage
       await AsyncStorage.setItem("authToken", token);
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-      //console.log("Token: ", token);
+      const jsonValue = JSON.stringify(user);
+      await AsyncStorage.setItem("userInfo", JSON.stringify(jsonValue));
       console.log("Usuario autenticado:", user);
+      console.log(user.id);
       return user;
     } catch (error) {
       console.error("Error durante el login:", error.message);

@@ -1,9 +1,10 @@
-import { View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import Login from "../pages/Login";
 
 export default function Index() {
   return (
     <View style={styles.container}>
+      <Text>puta mierda</Text>
       <Login />
     </View>
   );

@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 
 const BeltComponent = ({ cinturon, grados, id, tamano }) => {
+  console.log(grados);
   const getBeltStyle = (size) => {
     return size === "grande" ? styles.beltLarge : styles.beltSmall;
   };
@@ -32,7 +33,7 @@ const BeltComponent = ({ cinturon, grados, id, tamano }) => {
   };
 
   const getStripes = (grados) => {
-    return grados.split("I").length - 1;
+    return grados?.split("I").length - 1;
   };
 
   const stripes = Array.from({ length: getStripes(grados) }).map((_, index) => (

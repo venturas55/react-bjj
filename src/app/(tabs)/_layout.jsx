@@ -7,10 +7,14 @@ import {
   UserIcon,
   CalendarIcon,
 } from "../../components/Icons";
-import { Tabs } from "expo-router";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { Redirect, Tabs } from "expo-router";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 export default function TabLayout() {
+  const { loading, isLogged } = useGlobalContext();
+
+  if (!loading && !isLogged) return <Redirect href="/sign-in" />;
+
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
       <Tabs.Screen
@@ -57,7 +61,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="login"
+        name="sign-in"
         options={{
           title: "Login",
           tabBarIcon: ({ color }) => <UserIcon color={color} />,

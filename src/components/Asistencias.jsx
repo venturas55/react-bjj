@@ -1,11 +1,14 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import React from "react";
-import useUsuario from "../hooks/useUsuario";
+import useGetFetch from "../hooks/useGetFetch";
 import AsistenciaItem from "./AsistenciaItem";
 import { format } from "date-fns";
+import BeltComponent from "./BeltComponent";
 
 const Asistencias = (user) => {
-  const usuario = useUsuario("1");
+  const { data: usuario } = useGetFetch(
+    "http://adriandeharo.es:7001/api/usuario/1",
+  );
 
   return (
     <View style={styles.container}>
@@ -18,12 +21,20 @@ const Asistencias = (user) => {
             <Text></Text>
             <Text>
               Nacimiento:
-              {format(new Date(usuario.fecha_nacimiento), " dd/MM/yyyy")}
+              {usuario.fecha_nacimiento
+                ? format(new Date(usuario.fecha_nacimiento), " dd/MM/yyyy")
+                : "--"}
             </Text>
             <Text>{usuario.pais}</Text>
             <Text>{usuario.telefono}</Text>
             <Text>{usuario.cinturon}</Text>
             <Text>{usuario.grado}</Text>
+            <BeltComponent
+              cinturon={usuario.cinturon}
+              grados={usuario.grado}
+              id={usuario.id}
+              tamano="pequeño"
+            />
           </>
         ) : (
           <Text>Recibiendo datos</Text>
@@ -37,7 +48,7 @@ const Asistencias = (user) => {
           <AsistenciaItem asistencia={item} index={index} />
         )}
         ListEmptyComponent={
-          <Text style={styles.noClassesText}>No hay clases para este día</Text>
+          <Text style={styles.noClassesText}>No hay asistencias</Text>
         }
         style={styles.asistencias}
       />

@@ -1,20 +1,5 @@
-import { Main } from "../../components/Main";
-import { View, StyleSheet } from "react-native";
+import Calendario from "../../components/Calendario";
 
 export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Main />
-    </View>
-  );
+  return <Calendario />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#444",
-    alightItems: "center",
-    justifyContent: "center",
-    margin: 12,
-  },
-});

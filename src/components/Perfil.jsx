@@ -1,34 +1,28 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import React from "react";
 import BeltComponent from "./BeltComponent";
-import useUsuario from "../hooks/useUsuario";
+import useGetFetch from "../hooks/useGetFetch";
 
-const Perfil = ({ user }) => {
-  const usuario = useUsuario(1);
+const Perfil = () => {
+  const { data: usuario } = useGetFetch(
+    "http://adriandeharo.es:7001/api/usuario/1",
+  );
   console.log(usuario);
 
   return (
     <View style={styles.container}>
       {usuario ? (
         <>
+          <Text>{usuario.id}</Text>
           <Image
             style={styles.image}
             source={{
               uri: "http://adriandeharo.es:7001/api/usuario/foto/" + usuario.id,
             }}
           />
-          <Text>{usuario.nombre}</Text>
-          <Text>{usuario.apellidos}</Text>
-          <Text>{usuario.pais}</Text>
-          <Text>{usuario.fecha_nacimiento}</Text>
-          <Text>{usuario.pais}</Text>
-          <Text>{usuario.genero}</Text>
-          <Text>{usuario.codigo_iso}</Text>
           <Text>
-            {usuario.pais_telefono} {usuario.telefono}
+            {usuario.cinturon} {usuario.grado}
           </Text>
-          <Text>{usuario.cinturon}</Text>
-          <Text>{usuario.grado}</Text>
           <BeltComponent
             cinturon={usuario.cinturon}
             grados={usuario.grado}

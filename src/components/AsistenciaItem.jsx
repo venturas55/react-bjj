@@ -2,20 +2,30 @@ import { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated, Pressable } from "react-native";
 import { format } from "date-fns";
 import { Link } from "expo-router";
+import BeltComponent from "./BeltComponent";
 
 const AsistenciaItem = ({ asistencia, index }) => {
   /*   const formattedDate = format(new Date(clase.fecha_hora), "dd/MM/yyyy");
   const formattedTime = format(new Date(clase.fecha_hora), "HH:mm"); */
   console.log(asistencia);
   return (
-    <View style={styles.card}>
-      <Text style={styles.header}>{asistencia.nombre_actividad}</Text>
-      <Text>{asistencia.asistencia_id}</Text>
-      <Text>{asistencia.nombre_actividad}</Text>
-      <Text>{asistencia.descripcion_actividad}</Text>
-      <Text>{asistencia.fecha_hora}</Text>
-      <Text>{asistencia.fecha_hora}</Text>
-    </View>
+    <Link href={`/clases/${asistencia.clase_id}`} asChild>
+      <View style={styles.card}>
+        <Text style={styles.header}>
+          {asistencia.nombre_actividad} - {asistencia.asistencia_id}
+        </Text>
+        <Text></Text>
+        <Text>{asistencia.descripcion_actividad}</Text>
+        <Text>{format(new Date(asistencia.fecha_hora), " dd/MM/yyyy")}</Text>
+        <Text>{format(new Date(asistencia.fecha_hora), " hh:mm")}</Text>
+        <BeltComponent
+          cinturon={asistencia.cinturon}
+          grados={asistencia.grado}
+          id={asistencia.asistencia_id}
+          tamano="pequeño"
+        />
+      </View>
+    </Link>
   );
 };
 

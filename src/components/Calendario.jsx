@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,13 +9,15 @@ import {
 } from "react-native";
 import ClaseCard from "./ClaseCard"; // Import the AnimatedClaseCard component
 import theme from "./theme";
-import useClases from "../hooks/useClases.js";
+import useGetFetch from "../hooks/useGetFetch.js";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [calendarClasses, setCalendarClasses] = useState([]); // Clases filtradas para la fecha seleccionada
-  const clases = useClases();
+  const { data: clases } = useGetFetch(
+    "http://adriandeharo.es:7001/api/clases",
+  );
 
   // Obtener el nombre de los días de la semana
   const daysOfWeek = ["L", "M", "X", "J", "V", "S", "D"];

@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Text, View, ScrollView, Image, Dimensions, Alert } from "react-native";
 import { Link, router } from "expo-router";
-import { FormField, CustomButton } from "./../../components";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+
 import { images } from "../../constants";
+import { CustomButton, FormField } from "./../../components";
+/* import { getCurrentUser, signIn } from "../../lib/appwrite"; */
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { getCurrentUser } from "./../../lib/funciones";
-export default function Index() {
+
+const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
@@ -22,9 +24,9 @@ export default function Index() {
     setSubmitting(true);
 
     try {
-      //await signIn(form.usuario, form.password);
-      const result = await getCurrentUser(form.usuario, form.contrasena);
-      setUser(result);
+      /* await signIn(form.email, form.password); */
+      /*    const result = await getCurrentUser(); */
+      /*   setUser(result); */
       setIsLogged(true);
 
       Alert.alert("Success", "User signed in successfully");
@@ -37,7 +39,7 @@ export default function Index() {
   };
 
   return (
-    <SafeAreaProvider className="bg-primary h-full">
+    <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View
           className="w-full flex justify-center h-full px-4 my-6"
@@ -46,13 +48,13 @@ export default function Index() {
           }}
         >
           <Image
-            source={images.logo}
+            source={images.dreamart}
             resizeMode="contain"
             className="w-[115px] h-[34px]"
           />
 
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Log in to DreamArt
+            Log in to DreamArt (auth)/sign-in
           </Text>
 
           <FormField
@@ -90,6 +92,8 @@ export default function Index() {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
-}
+};
+
+export default SignIn;
