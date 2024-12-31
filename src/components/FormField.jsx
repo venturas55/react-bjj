@@ -15,11 +15,11 @@ const FormField = ({
 
   return (
     <View
-      className={`justify-center items-center mt-7 space-y-2 ${otherStyles}`}
+      className={`justify-center items-center mt-2 space-y-2 ${otherStyles}`}
     >
-      <Text className="text-base text-gray-100 font-pmedium">{title}</Text>
+      <Text className="text-base text-gray-100 font-pmedium mb-5">{title}</Text>
 
-      <View className="w-8/12 h-16 px-4 bg-black rounded-2xl border-2 border-black focus:border-secondary flex flex-row items-center">
+      <View className="w-10/12 h-16 px-4 bg-black rounded-2xl border-2 border-black focus:border-secondary flex flex-row items-center">
         <TextInput
           className="flex-1 text-white font-psemibold text-base"
           value={value}

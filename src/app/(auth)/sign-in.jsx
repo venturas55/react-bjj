@@ -54,7 +54,7 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView className="justify-center items-center h-full bg-slate-900 ">
+    <SafeAreaView className="justify-center items-center h-full bg-slate-900">
       <ScrollView>
         <View
           className="w-full flex justify-center h-full px-4 my-6"
@@ -62,7 +62,11 @@ const SignIn = () => {
             minHeight: Dimensions.get("window").height - 100,
           }}
         >
-          <Image source={images.dreamart} resizeMode="contain" className="" />
+          <Image
+            source={images.dreamart}
+            resizeMode="contain"
+            className="w-full"
+          />
 
           <Text className="text-2xl font-semibold text-white ">
             Log in to DreamArt (auth)/sign-in
@@ -88,13 +92,13 @@ const SignIn = () => {
             isLoading={isSubmitting}
           />
 
-          <View className="flex justify-center pt-5 flex-row gap-2">
+          <View className="flex justify-center pt-2 flex-row gap-2">
             <Text className="text-lg text-gray-400 font-pregular">
               Don't have an account?
             </Text>
             <Link
               href="/sign-up"
-              className="text-lg font-psemibold text-secondary"
+              className="text-lg font-psemibold text-gray-100 mb-7 pb-7 "
             >
               Signup
             </Link>

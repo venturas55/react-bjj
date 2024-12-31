@@ -104,7 +104,7 @@ const Calendar = () => {
 
   return (
     <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
+      <View style={styles.container} className="bg-slate-900">
         {/* Encabezado del calendario */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigateMonth(-1)}>
@@ -160,8 +160,7 @@ const Calendar = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 2,
-    backgroundColor: "#f9f9f9",
+    padding: 5,
   },
   header: {
     flexDirection: "row",
