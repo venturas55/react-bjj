@@ -1,5 +1,5 @@
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import Native from "../pages/native";
 
 export default function Index() {
@@ -7,6 +7,7 @@ export default function Index() {
     <SafeAreaProvider>
       <View style={styles.container}>
         <Native />
+        <Text className="text-grey100">Hola</Text>
       </View>
     </SafeAreaProvider>
   );

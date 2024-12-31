@@ -7,7 +7,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { images } from "../../constants";
 import { CustomButton, FormField } from "./../../components";
-/* import { getCurrentUser, signIn } from "../../lib/appwrite"; */
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
@@ -55,7 +54,7 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="justify-center items-center h-full bg-slate-900 ">
       <ScrollView>
         <View
           className="w-full flex justify-center h-full px-4 my-6"
@@ -63,13 +62,9 @@ const SignIn = () => {
             minHeight: Dimensions.get("window").height - 100,
           }}
         >
-          <Image
-            source={images.dreamart}
-            resizeMode="contain"
-            className="w-[115px] h-[34px]"
-          />
+          <Image source={images.dreamart} resizeMode="contain" className="" />
 
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+          <Text className="text-2xl font-semibold text-white ">
             Log in to DreamArt (auth)/sign-in
           </Text>
 
@@ -77,7 +72,6 @@ const SignIn = () => {
             title="Usuario"
             value={form.usuario}
             handleChangeText={(e) => setForm({ ...form, usuario: e })}
-            otherStyles="mt-7"
             keyboardType="email-address"
           />
 
@@ -85,7 +79,6 @@ const SignIn = () => {
             title="Password"
             value={form.contrasena}
             handleChangeText={(e) => setForm({ ...form, contrasena: e })}
-            otherStyles="mt-7"
           />
 
           <CustomButton
@@ -96,7 +89,7 @@ const SignIn = () => {
           />
 
           <View className="flex justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-gray-100 font-pregular">
+            <Text className="text-lg text-gray-400 font-pregular">
               Don't have an account?
             </Text>
             <Link
