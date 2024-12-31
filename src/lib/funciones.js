@@ -1,14 +1,5 @@
-/* import {
-  Account,
-  Avatars,
-  Client,
-  Databases,
-  ID,
-  Query,
-  Storage,
-} from "react-native-appwrite";
- */
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 export const appwriteConfig = {
   endpoint: "https://cloud.appwrite.io/v1",
   platform: "com.jsm.sora",
@@ -18,18 +9,6 @@ export const appwriteConfig = {
   userCollectionId: "660d14c0e8ae0ea842b8",
   videoCollectionId: "660d157fcb8675efe308",
 };
-
-/*const client = new Client();
-
-client
-  .setEndpoint(appwriteConfig.endpoint)
-  .setProject(appwriteConfig.projectId)
-  .setPlatform(appwriteConfig.platform);
-
- const account = new Account(client);
-const storage = new Storage(client);
-const avatars = new Avatars(client);
-const databases = new Databases(client); */
 
 // Register user
 export async function createUser(email, password, usuario, nombre, apellidos) {
@@ -81,13 +60,20 @@ export async function getAccount() {
 // Get Current User
 export async function getCurrentUser() {
   try {
+    const token = await AsyncStorage.getItem("authToken");
+    if (!token) {
+      return null;
+    }
+
     // eslint-disable-next-line prettier/prettier
-    const response = await globalThis.fetch(
-      "http://adriandeharo.es:7001/api/usuarios/1",
-    );
-    const json = await response.json();
-    console.log(json);
-    return json;
+    const response = await axios.get("http://tu-servidor.com/api/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+
+    return response.data; // Devuelve los datos del usuario
   } catch (error) {
     console.log(error);
     return null;

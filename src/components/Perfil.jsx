@@ -1,38 +1,55 @@
 import { View, Text, Image, StyleSheet } from "react-native";
-import React from "react";
+import { useGlobalContext } from "../context/GlobalProvider";
+import React, { useState } from "react";
 import BeltComponent from "./BeltComponent";
 import useGetFetch from "../hooks/useGetFetch";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomButton from "./CustomButton";
 
 const Perfil = () => {
-  const { data: usuario } = useGetFetch(
-    "http://adriandeharo.es:7001/api/usuario/1",
+  const { user, isLogged, setIsLogged, setUser, loading } = useGlobalContext();
+
+  const { data } = useGetFetch(
+    "http://adriandeharo.es:7001/api/usuario/" + user.id,
   );
-  console.log(usuario);
+
+  const handleLogout = async () => {
+    // Elimina el token de AsyncStorage
+    await AsyncStorage.removeItem("authToken");
+
+    // Limpia el estado del contexto global
+    setIsLogged(false);
+    setUser(null);
+
+    // Aquí puedes redirigir al usuario a la pantalla de login
+    console.log("Usuario cerrado sesión");
+  };
 
   return (
     <View style={styles.container}>
-      {usuario ? (
+      {user ? (
         <>
-          <Text>{usuario.id}</Text>
+          <Text>{user.id}</Text>
           <Image
             style={styles.image}
             source={{
-              uri: "http://adriandeharo.es:7001/api/usuario/foto/" + usuario.id,
+              uri: "http://adriandeharo.es:7001/api/usuario/foto/" + user.id,
             }}
           />
           <Text>
-            {usuario.cinturon} {usuario.grado}
+            {user.cinturon} {user.grado}
           </Text>
           <BeltComponent
-            cinturon={usuario.cinturon}
-            grados={usuario.grado}
-            id={usuario.id}
+            cinturon={user.cinturon}
+            grados={user.grado}
+            id={user.id}
             tamano="pequeño"
           />
         </>
       ) : (
         <Text>Recibiendo datos</Text>
       )}
+      <CustomButton title="Cerrar sesión" handlePress={handleLogout} />;
     </View>
   );
 };

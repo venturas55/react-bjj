@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { images } from "../../constants";
 import { CustomButton, FormField } from "./../../components";
@@ -9,7 +11,7 @@ import { CustomButton, FormField } from "./../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
+  const { setUser, setIsLogged, setLoading } = useGlobalContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     usuario: "",
@@ -24,15 +26,29 @@ const SignIn = () => {
     setSubmitting(true);
 
     try {
-      /* await signIn(form.email, form.password); */
-      /*    const result = await getCurrentUser(); */
-      /*   setUser(result); */
-      setIsLogged(true);
+      const response = await axios.post(
+        "http://adriandeharo.es:7001/api/login",
+        {
+          usuario: form.usuario, // Usamos el email como 'username'
+          contrasena: form.contrasena,
+        },
+      );
+      const { token, user } = response.data;
 
-      Alert.alert("Success", "User signed in successfully");
-      router.replace("/");
+      // Guardar el token JWT en AsyncStorage
+      await AsyncStorage.setItem("authToken", token);
+
+      if (response.data.success) {
+        // Si el login es exitoso, navega al siguiente screen
+        setIsLogged(true);
+        setUser(user);
+        router.replace("/");
+      } else {
+        Alert.alert("Error", response.data.message);
+      }
     } catch (error) {
-      Alert.alert("Error", error.message);
+      console.error(error);
+      Alert.alert("Error", "No se pudo iniciar sesión");
     } finally {
       setSubmitting(false);
     }
