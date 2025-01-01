@@ -12,6 +12,8 @@ const Perfil = () => {
   const { data } = useGetFetch(
     "http://adriandeharo.es:7001/api/usuario/" + user.id,
   );
+  console.log(data);
+  setUser(data);
 
   const handleLogout = async () => {
     // Elimina el token de AsyncStorage
@@ -28,24 +30,31 @@ const Perfil = () => {
   return (
     <View style={styles.container}>
       {user ? (
-        <>
-          <Text>{user.id}</Text>
+        <View className="text-current content-center items-center mb-5">
           <Image
             style={styles.image}
             source={{
               uri: "http://adriandeharo.es:7001/api/usuario/foto/" + user.id,
             }}
           />
-          <Text>
+          <Text className="text-2xl my-3 text-current">
+            {user.nombre} {user.apellidos}
+          </Text>
+          <Text className="my-3">{user.fecha_nacimiento}</Text>
+          <Text className="my-3">{user.telefono}</Text>
+          <Text className="my-3">{user.genero}</Text>
+
+          <Text className="my-3">
             {user.cinturon} {user.grado}
           </Text>
           <BeltComponent
+            className="my-3 py-3"
             cinturon={user.cinturon}
             grados={user.grado}
             id={user.id}
             tamano="pequeño"
           />
-        </>
+        </View>
       ) : (
         <Text>Recibiendo datos</Text>
       )}

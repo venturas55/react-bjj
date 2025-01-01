@@ -66,7 +66,7 @@ export async function getCurrentUser() {
     }
 
     // eslint-disable-next-line prettier/prettier
-    const response = await axios.get("http://tu-servidor.com/api/me", {
+    const response = await axios.get("http://adriandeharo.es:7001/api/login", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

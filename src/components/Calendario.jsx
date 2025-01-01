@@ -90,39 +90,39 @@ const Calendar = () => {
 
     return (
       <TouchableOpacity
+        className="flex-1 py-2"
         style={[
-          styles.dayCell,
           !isCurrentMonth && styles.inactiveDay,
           isSelected && styles.selectedDay,
         ]}
         onPress={() => handleDayPress(item)}
       >
-        <Text style={styles.dayText}>{item.getDate()}</Text>
+        <Text className="py-2 text-center ">{item.getDate()}</Text>
       </TouchableOpacity>
     );
   };
 
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container} className="bg-slate-900">
+    <>
+      <View className="bg-grey-200 p-4">
         {/* Encabezado del calendario */}
-        <View style={styles.header}>
+        <View className="flex-row justify-between">
           <TouchableOpacity onPress={() => navigateMonth(-1)}>
-            <Text style={styles.navButton}>{"<"}</Text>
+            <Text className="text-5xl text-blue-900">{"<"}</Text>
           </TouchableOpacity>
-          <Text style={styles.headerText}>
+          <Text className="text-2xl text-blue-900 font-bold">
             {currentDate.toLocaleString("default", { month: "long" })}{" "}
             {currentDate.getFullYear()}
           </Text>
           <TouchableOpacity onPress={() => navigateMonth(1)}>
-            <Text style={styles.navButton}>{">"}</Text>
+            <Text className="text-5xl text-blue-900">{">"}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Días de la semana */}
-        <View style={styles.weekRow}>
+        <View className="flex-row">
           {daysOfWeek.map((day, index) => (
-            <Text key={index} style={styles.weekDay}>
+            <Text key={index} className="flex-1 text-center">
               {day}
             </Text>
           ))}
@@ -135,9 +135,11 @@ const Calendar = () => {
           renderItem={renderDay}
           numColumns={7}
           scrollEnabled={false}
-          style={styles.calendarGrid}
+          className="mb-1"
         />
+      </View>
 
+      <ScrollView className="mx-6">
         {/* Mostrar las clases para el día seleccionado */}
         <FlatList
           data={calendarClasses}
@@ -146,59 +148,19 @@ const Calendar = () => {
             <ClaseCard clase={item} index={index} />
           )}
           ListEmptyComponent={
-            <Text style={styles.noClassesText}>
+            <Text className="text-center font-bold">
               {selectedDate
                 ? "No hay clases para este día."
                 : "Selecciona un día."}
             </Text>
           }
         />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 5,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  navButton: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#007BFF",
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  weekRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  weekDay: {
-    flex: 1,
-    textAlign: "center",
-    fontWeight: "bold",
-    color: "#555",
-  },
-  calendarGrid: {
-    marginBottom: 16,
-  },
-  dayCell: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    height: 50,
-  },
   inactiveDay: {
     backgroundColor: "#f0f0f0",
   },
@@ -208,17 +170,6 @@ const styles = StyleSheet.create({
   },
   dayText: {
     color: "#333",
-  },
-  asistente: {
-    fontSize: 12,
-    color: "#666",
-    marginRight: 4,
-  },
-  noClassesText: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "#888",
-    marginTop: 16,
   },
 });
 

@@ -1,6 +1,15 @@
-import { Text, Image, StyleSheet } from "react-native";
+import { Image, StyleSheet } from "react-native";
 
-const Avatar = ({ id }) => {
+const Avatar = ({ id, size }) => {
+  if (size === undefined) size = 40;
+  const styles = StyleSheet.create({
+    image: {
+      width: size,
+      height: size,
+      borderRadius: 20,
+      marginRight: 8,
+    },
+  });
   return (
     <>
       <Image
@@ -12,14 +21,5 @@ const Avatar = ({ id }) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 8,
-  },
-});
 
 export default Avatar;

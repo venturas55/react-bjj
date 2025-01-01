@@ -8,6 +8,7 @@ export default function Layout() {
     <GlobalProvider>
       <SafeAreaProvider>
         <Stack
+          className="bg-slate-900"
           screenOptions={{
             headerStyle: {
               backgroundColor: "#aaaaaa",

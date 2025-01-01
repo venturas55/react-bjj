@@ -54,10 +54,10 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView className="justify-center items-center h-full bg-slate-900">
-      <ScrollView>
+    <SafeAreaView className="mx-auto h-full bg-slate-900">
+      <ScrollView className="">
         <View
-          className="w-full flex justify-center h-full px-4 my-6"
+          className="w-full h-full px-4"
           style={{
             minHeight: Dimensions.get("window").height - 100,
           }}
@@ -65,11 +65,11 @@ const SignIn = () => {
           <Image
             source={images.dreamart}
             resizeMode="contain"
-            className="w-full"
+            className="w-10/12 mx-auto"
           />
 
-          <Text className="text-2xl font-semibold text-white ">
-            Log in to DreamArt (auth)/sign-in
+          <Text className="justify-self-center justify-items-center text-2xl font-semibold text-white">
+            Log in to DreamArt
           </Text>
 
           <FormField

@@ -10,16 +10,22 @@ const ClaseCard = ({ clase }) => {
   return (
     <Link href={`/clases/${clase.clase_id}`} asChild>
       <Pressable>
-        <View style={styles.card}>
-          <Text style={styles.claseTitle}>
-            {clase.clase_id} {clase.nombre_actividad}
-          </Text>
-          <Text>Fecha: {formattedDate}</Text>
-          <Text>Hora: {formattedTime}</Text>
-          {/* <Text>Duración: {clase.duracion} min</Text> */}
-          <View style={styles.asistentesContainer}>
+        <View className="flex-1 bg-grey-600 rounded-3xl shadow-md m-4 p-4">
+          <View className="flex-row p-4 bg-grey-400">
+            <Avatar id={clase.instructor_id} tamano="small"></Avatar>
+            <View className="flex-1 ">
+              <Text style={styles.claseTitle}>
+                {clase.clase_id} - {clase.nombre_actividad}
+              </Text>
+              <Text>
+                Fecha: {formattedDate} {formattedTime}
+              </Text>
+            </View>
+            {/* <Text>Duración: {clase.duracion} min</Text> */}
+          </View>
+          <View className="flex-row flex-wrap px-4 pb-4 bg-grey-400">
             {clase.asistentes.map((asistente, index) => (
-              <Avatar key={index} id={asistente.usuario_id} />
+              <Avatar key={index} id={asistente.usuario_id} size="20" />
             ))}
           </View>
         </View>
@@ -48,26 +54,9 @@ export function AnimatedClaseCard({ clase, index }) {
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#ddd",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    marginBottom: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
-  },
   claseTitle: {
     fontSize: 16,
     fontWeight: "bold",
-  },
-  asistentesContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 8,
   },
   asistente: {
     marginHorizontal: 5,
