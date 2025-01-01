@@ -139,7 +139,7 @@ const Calendar = () => {
         />
       </View>
 
-      <ScrollView className="mx-6">
+      <View className="mx-6">
         {/* Mostrar las clases para el día seleccionado */}
         <FlatList
           data={calendarClasses}
@@ -155,7 +155,7 @@ const Calendar = () => {
             </Text>
           }
         />
-      </ScrollView>
+      </View>
     </>
   );
 };

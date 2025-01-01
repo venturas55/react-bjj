@@ -58,7 +58,7 @@ const Perfil = () => {
       ) : (
         <Text>Recibiendo datos</Text>
       )}
-      <CustomButton title="Cerrar sesión" handlePress={handleLogout} />;
+      <CustomButton title="Cerrar sesión" handlePress={handleLogout} />
     </View>
   );
 };
