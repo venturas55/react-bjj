@@ -60,9 +60,18 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <UserIcon color={color} />,
         }}
       />
+
+      <Tabs.Screen
+        name="ListActividades"
+        options={{
+          title: "Actividades",
+          tabBarIcon: ({ color }) => <UserIcon color={color} />,
+        }}
+      />
       <Tabs.Screen
         name="sign-in"
         options={{
+          href: null,
           title: "Login",
           tabBarIcon: ({ color }) => <UserIcon color={color} />,
         }}

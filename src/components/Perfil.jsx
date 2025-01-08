@@ -2,17 +2,15 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { useGlobalContext } from "../context/GlobalProvider";
 import React, { useState } from "react";
 import BeltComponent from "./BeltComponent";
-import useGetFetch from "../hooks/useGetFetch";
+import getFetch from "../hooks/getFetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomButton from "./CustomButton";
 
 const Perfil = () => {
   const { user, isLogged, setIsLogged, setUser, loading } = useGlobalContext();
 
-  const { data } = useGetFetch(
-    "http://adriandeharo.es:7001/api/usuario/" + user.id,
-  );
-  console.log(data);
+  const data = getFetch("http://adriandeharo.es:7001/api/usuario/" + user.id);
+  //console.log(data);
   setUser(data);
 
   const handleLogout = async () => {

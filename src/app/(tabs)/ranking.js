@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import React from "react";
-import useGetFetch from "./../../hooks/useGetFetch";
+import getFetch from "./../../hooks/getFetch";
 import AsistenciaItem from "./../../components/AsistenciaItem";
 import Avatar from "./../../components/Avatar";
 import { format } from "date-fns";
 import BeltComponent from "./../../components/BeltComponent";
 
 const Ranking = (user) => {
-  const { data } = useGetFetch("http://adriandeharo.es:7001/api/asistencias");
+  const { data } = getFetch("http://adriandeharo.es:7001/api/asistencias");
   const { asistencias, ranking } = data;
   console.log(data.ranking);
 

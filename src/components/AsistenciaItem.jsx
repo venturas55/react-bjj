@@ -7,7 +7,7 @@ import BeltComponent from "./BeltComponent";
 const AsistenciaItem = ({ asistencia, index }) => {
   /*   const formattedDate = format(new Date(clase.fecha_hora), "dd/MM/yyyy");
   const formattedTime = format(new Date(clase.fecha_hora), "HH:mm"); */
-  console.log(asistencia);
+  //console.log(asistencia);
   return (
     <Link href={`/clases/${asistencia.clase_id}`} asChild>
       <View style={styles.card}>

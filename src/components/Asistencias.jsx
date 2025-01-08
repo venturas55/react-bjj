@@ -1,14 +1,12 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import React from "react";
-import useGetFetch from "../hooks/useGetFetch";
+import getFetch from "../hooks/getFetch";
 import AsistenciaItem from "./AsistenciaItem";
 import { format } from "date-fns";
 import BeltComponent from "./BeltComponent";
 
 const Asistencias = (user) => {
-  const { data: usuario } = useGetFetch(
-    "http://adriandeharo.es:7001/api/usuario/1",
-  );
+  const usuario = getFetch("http://adriandeharo.es:7001/api/usuario/1");
 
   return (
     <View style={styles.container}>
