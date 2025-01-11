@@ -1,106 +1,182 @@
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import { View, Text, ScrollView, Dimensions, Alert, Image, ActivityIndicator } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { images } from "../../constants";
 import { CustomButton, FormField } from "./../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { API_URL, TOKEN_STORAGE_KEY, USER_STORAGE_KEY, ERROR_MESSAGES } from "../../config/constants";
+import { getCurrentUser } from "../../lib/funciones";
 
 const SignIn = () => {
-  const { setUser, setIsLogged, setLoading } = useGlobalContext();
+  const { setUser, setIsLogged } = useGlobalContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     usuario: "",
     contrasena: "",
   });
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.usuario.trim()) {
+      newErrors.usuario = "Username is required";
+    }
+    if (!form.contrasena) {
+      newErrors.contrasena = "Password is required";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const submit = async () => {
-    if (form.usuario === "" || form.contrasena === "") {
-      Alert.alert("Error", "Please fill in all fields");
+    console.log('1. Submit started with form:', form);
+    if (!validateForm()) {
+      console.log('2. Form validation failed');
+      return;
     }
 
     setSubmitting(true);
+    setErrors({});
 
     try {
+      console.log('3. Making API request to:', `${API_URL}/api/login`);
       const response = await axios.post(
-        "http://adriandeharo.es:7001/api/login",
+        `${API_URL}/api/login`,
         {
-          usuario: form.usuario, // Usamos el email como 'username'
+          usuario: form.usuario.trim(),
           contrasena: form.contrasena,
         },
+        {
+          timeout: 10000, // 10 second timeout
+        }
       );
+      console.log('4. API Response:', response.data);
+
+      if (!response.data.success) {
+        console.log('5. Login failed:', response.data.message);
+        Alert.alert("Error", response.data.message || "Login failed");
+        return;
+      }
+
       const { token, user } = response.data;
+      console.log('6. Got token and user:', { 
+        token,
+        tokenLength: token?.length,
+        user,
+        userId: user?.id
+      });
 
-      // Guardar el token JWT en AsyncStorage
-      await AsyncStorage.setItem("authToken", token);
+      // Make sure token is properly formatted
+      const finalToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+      console.log('7. Final token:', finalToken);
 
-      if (response.data.success) {
-        // Si el login es exitoso, navega al siguiente screen
+      console.log('8. Storing token and user data...');
+      await Promise.all([
+        AsyncStorage.setItem(TOKEN_STORAGE_KEY, finalToken),
+        AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
+      ]);
+      
+      console.log('9. Setting axios default header');
+      axios.defaults.headers.common['Authorization'] = finalToken;
+      console.log('10. Auth header set:', axios.defaults.headers.common['Authorization']);
+      
+      console.log('11. Getting full user profile');
+      const userProfile = await getCurrentUser();
+      if (userProfile) {
+        console.log('12. Setting user state with full profile');
+        setUser(userProfile);
         setIsLogged(true);
-        setUser(user);
+        
+        console.log('13. Navigation to home');
         router.replace("/");
       } else {
-        Alert.alert("Error", response.data.message);
+        console.log('ERROR: Could not get user profile');
+        Alert.alert("Error", "Could not get user profile");
       }
+      
     } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "No se pudo iniciar sesión");
+      console.log('ERROR in submit:', error.message);
+      if (error.response) {
+        console.log('ERROR Status:', error.response.status);
+        console.log('ERROR Data:', error.response.data);
+      } else if (error.request) {
+        console.log('ERROR Request:', error.request);
+      }
+      let errorMessage = ERROR_MESSAGES.GENERAL_ERROR;
+      
+      if (error.response) {
+        // Server responded with error
+        errorMessage = error.response.data?.message || ERROR_MESSAGES.INVALID_CREDENTIALS;
+      } else if (error.request) {
+        // No response received
+        errorMessage = ERROR_MESSAGES.NETWORK_ERROR;
+      }
+      
+      Alert.alert("Error", errorMessage);
+      console.error("Login error:", error);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <SafeAreaView className="mx-auto h-full bg-slate-900">
-      <ScrollView className="">
-        <View
-          className="w-full h-full px-4"
-          style={{
-            minHeight: Dimensions.get("window").height - 100,
-          }}
-        >
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FAFAFC" }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
+        <View style={{ alignItems: "center", marginVertical: 20 }}>
           <Image
             source={images.dreamart}
-            resizeMode="contain"
-            className="w-10/12 mx-auto"
+            style={{
+              width: Dimensions.get("window").width * 0.7,
+              height: 100,
+              resizeMode: "contain",
+            }}
           />
+        </View>
 
-          <Text className="justify-self-center justify-items-center text-2xl font-semibold text-white">
-            Log in to DreamArt
-          </Text>
-
+        <View style={{ padding: 20, gap: 20 }}>
           <FormField
-            title="Usuario"
+            label="Username"
+            placeholder="Enter your username"
             value={form.usuario}
-            handleChangeText={(e) => setForm({ ...form, usuario: e })}
-            keyboardType="email-address"
+            onChangeText={(text) => {
+              setForm({ ...form, usuario: text });
+              if (errors.usuario) setErrors({ ...errors, usuario: "" });
+            }}
+            error={errors.usuario}
+            autoCapitalize="none"
+            editable={!isSubmitting}
           />
 
           <FormField
-            title="Password"
+            label="Password"
+            placeholder="Enter your password"
             value={form.contrasena}
-            handleChangeText={(e) => setForm({ ...form, contrasena: e })}
+            onChangeText={(text) => {
+              setForm({ ...form, contrasena: text });
+              if (errors.contrasena) setErrors({ ...errors, contrasena: "" });
+            }}
+            secureTextEntry
+            error={errors.contrasena}
+            editable={!isSubmitting}
           />
 
           <CustomButton
-            title="Sign In"
-            handlePress={submit}
-            containerStyles="mt-7"
-            isLoading={isSubmitting}
-          />
+            title={isSubmitting ? "Signing in..." : "Sign In"}
+            onPress={submit}
+            disabled={isSubmitting}
+            style={{ marginTop: 10 }}
+          >
+            {isSubmitting && <ActivityIndicator color="white" style={{ marginLeft: 10 }} />}
+          </CustomButton>
 
-          <View className="flex justify-center pt-2 flex-row gap-2">
-            <Text className="text-lg text-gray-400 font-pregular">
-              Don't have an account?
-            </Text>
-            <Link
-              href="/sign-up"
-              className="text-lg font-psemibold text-gray-100 mb-7 pb-7 "
-            >
-              Signup
+          <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}>
+            <Text>Don't have an account? </Text>
+            <Link href="/sign-up" style={{ color: "#007AFF" }}>
+              Sign up
             </Link>
           </View>
         </View>

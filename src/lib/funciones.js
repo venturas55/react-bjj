@@ -1,14 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-export const appwriteConfig = {
-  endpoint: "https://cloud.appwrite.io/v1",
-  platform: "com.jsm.sora",
-  projectId: "660d0e00da0472f3ad52",
-  storageId: "660d0e59e293896f1eaf",
-  databaseId: "660d14b2b809e838959a",
-  userCollectionId: "660d14c0e8ae0ea842b8",
-  videoCollectionId: "660d157fcb8675efe308",
-};
+import { API_URL, TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from "../config/constants";
 
 // Register user
 export async function createUser(email, password, usuario, nombre, apellidos) {
@@ -20,7 +12,7 @@ export async function createUser(email, password, usuario, nombre, apellidos) {
       email,
       contrasena: password,
     };
-    const response = await fetch("http://adriandeharo.es:7001/signup", {
+    const response = await fetch(`${API_URL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,22 +52,64 @@ export async function getAccount() {
 // Get Current User
 export async function getCurrentUser() {
   try {
-    const token = await AsyncStorage.getItem("authToken");
+    console.log('GCU1. Getting current user');
+    const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
+    console.log('GCU2. Token from storage:', token);
+    
     if (!token) {
+      console.log('GCU3. No token found');
       return null;
     }
 
-    // eslint-disable-next-line prettier/prettier
-    const response = await axios.post("http://adriandeharo.es:7001/api/login", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log(response.data);
+    // Get stored user data to get the ID
+    const storedUserData = await AsyncStorage.getItem(USER_STORAGE_KEY);
+    if (!storedUserData) {
+      console.log('GCU4. No stored user data found');
+      return null;
+    }
 
-    return response.data; // Devuelve los datos del usuario
+    const userData = JSON.parse(storedUserData);
+    console.log('GCU5. Stored user data:', userData);
+    console.log('GCU5.1. User ID:', userData.id);
+
+    // Make sure the token has the Bearer prefix
+    const bearerToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+    console.log('GCU6. Using Authorization header:', bearerToken);
+    
+    const url = `${API_URL}/api/usuarios/${userData.id}`;
+    console.log('GCU7. Making request to:', url);
+    
+    // Set up axios config with Bearer token
+    const config = {
+      headers: {
+        'Authorization': bearerToken,
+        'Content-Type': 'application/json'
+      }
+    };
+    console.log('GCU7.1. Request config:', JSON.stringify(config, null, 2));
+    
+    // Set the default header for all future requests
+    axios.defaults.headers.common['Authorization'] = bearerToken;
+    
+    const response = await axios.get(url, config);
+    console.log('GCU8. Response received:', response.data);
+    
+    if (response.data) {
+      console.log('GCU9. User data found in response');
+      const userWithAsistencias = response.data;
+      await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithAsistencias));
+      return userWithAsistencias;
+    } else {
+      console.log('GCU10. No user data in response');
+      return null;
+    }
   } catch (error) {
-    console.log(error);
+    console.error('GCU ERROR:', {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+      headers: error.response?.headers
+    });
     return null;
   }
 }

@@ -1,55 +1,105 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react";
+import { useGlobalContext } from "../context/GlobalProvider";
 import getFetch from "../hooks/getFetch";
 import AsistenciaItem from "./AsistenciaItem";
 import { format } from "date-fns";
 import BeltComponent from "./BeltComponent";
 
-const Asistencias = (user) => {
-  const usuario = getFetch("http://adriandeharo.es:7001/api/usuario/1");
+const Asistencias = () => {
+  const { user } = useGlobalContext();
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        if (!user?.id) {
+          throw new Error("User ID not found");
+        }
+
+        const data = await getFetch(`http://adriandeharo.es:7001/api/usuario/${user.id}`);
+        if (data) {
+          setUserData(data);
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [user?.id]);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.centered]}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={[styles.container, styles.centered]}>
+        <Text style={styles.error}>Error: {error}</Text>
+      </View>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <View style={[styles.container, styles.centered]}>
+        <Text>No user data available</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.usuario}>
-        {usuario ? (
-          <>
-            <Text>
-              {usuario.nombre} {usuario.apellidos}
-            </Text>
-            <Text></Text>
-            <Text>
-              Nacimiento:
-              {usuario.fecha_nacimiento
-                ? format(new Date(usuario.fecha_nacimiento), " dd/MM/yyyy")
-                : "--"}
-            </Text>
-            <Text>{usuario.pais}</Text>
-            <Text>{usuario.telefono}</Text>
-            <Text>{usuario.cinturon}</Text>
-            <Text>{usuario.grado}</Text>
-            <BeltComponent
-              cinturon={usuario.cinturon}
-              grados={usuario.grado}
-              id={usuario.id}
-              tamano="pequeño"
-            />
-          </>
-        ) : (
-          <Text>Recibiendo datos</Text>
-        )}
+        <Text style={styles.name}>
+          {userData.nombre} {userData.apellidos}
+        </Text>
+        
+        <Text style={styles.info}>
+          Nacimiento:
+          {userData.fecha_nacimiento
+            ? format(new Date(userData.fecha_nacimiento), " dd/MM/yyyy")
+            : "--"}
+        </Text>
+        
+        <Text style={styles.info}>{userData.pais}</Text>
+        <Text style={styles.info}>{userData.telefono}</Text>
+        
+        <View style={styles.beltContainer}>
+          <BeltComponent
+            cinturon={userData.cinturon}
+            grado={userData.grado}
+            tamano="pequeño"
+          />
+        </View>
       </View>
 
-      <FlatList
-        data={usuario?.asistencias}
-        keyExtractor={(item) => item.asistencia_id.toString()}
-        renderItem={({ item, index }) => (
-          <AsistenciaItem asistencia={item} index={index} />
+      <View style={styles.asistenciasContainer}>
+        <Text style={styles.sectionTitle}>Historial de Asistencias</Text>
+        {userData?.asistencias && Array.isArray(userData.asistencias) && userData.asistencias.length > 0 ? (
+          <FlatList
+            data={userData.asistencias}
+            keyExtractor={(item) => (item.id || item.asistencia_id || Math.random().toString()).toString()}
+            renderItem={({ item }) => <AsistenciaItem asistencia={item} />}
+            contentContainerStyle={styles.listContainer}
+          />
+        ) : (
+          <Text style={styles.noData}>No hay asistencias registradas</Text>
         )}
-        ListEmptyComponent={
-          <Text style={styles.noClassesText}>No hay asistencias</Text>
-        }
-        style={styles.asistencias}
-      />
+      </View>
     </View>
   );
 };
@@ -57,19 +107,52 @@ const Asistencias = (user) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#dfd",
-    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 16,
+  },
+  centered: {
     justifyContent: "center",
+    alignItems: "center",
   },
   usuario: {
+    backgroundColor: "#f5f5f5",
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  info: {
+    fontSize: 16,
+    marginBottom: 4,
+    color: "#666",
+  },
+  beltContainer: {
+    marginTop: 8,
+  },
+  asistenciasContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 12,
+  },
+  noData: {
+    textAlign: "center",
+    color: "#666",
+    marginTop: 20,
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
+  },
+  listContainer: {
     paddingVertical: 16,
-  },
-  asistencias: {
-    flex: 1,
-  },
+  }
 });
 
 export default Asistencias;
