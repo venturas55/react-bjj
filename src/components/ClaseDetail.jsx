@@ -5,12 +5,12 @@ import { format } from "date-fns";
 import BeltComponent from "./BeltComponent";
 
 const ClaseDetail = ({ clase }) => {
+  console.log("Clase: ",clase)
   return (
     <View>
       <View>
         <Text style={styles.tittle}>
-          Clase {clase.clase_id}
-          {format(new Date(moment(clase.fecha_hora).toISOString()), "dd MMMM")}
+        {clase.clase_id} {clase.nombre_actividad}  Clase {format(new Date(moment(clase.fecha_hora).toISOString()), "dd MMMM")}
         </Text>
       </View>
       <View style={styles.card}>
@@ -34,11 +34,6 @@ const ClaseDetail = ({ clase }) => {
       <Text className="text-blue-400">{clase.descripcion_actividad}</Text>
 
       <View style={styles.asistentesContainer}>
-        {clase?.asistentes?.length > 0 ? (
-          <Text>Asistentes: {clase.asistentes.length}</Text>
-        ) : (
-          <Text>No hay asistentes</Text>
-        )}
         <View style={styles.asistentesContainer}>
           {clase?.asistentes?.length > 0 ? (
             clase.asistentes.map((asistente, index) => (

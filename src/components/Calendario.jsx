@@ -24,42 +24,35 @@ const Calendar = () => {
         const clases = await getFetch(`${API_URL}/api/clases`);
         console.log("CLASES: ", clases);
         setAllClasses(clases);
+        
+        // Automatically select and show classes for the current day
+        handleDayPress(new Date());
       } catch (error) {
         console.error("Error fetching classes:", error);
       }
     };
 
     fetchClasses();
-  }, []); // Empty dependency array means this effect
+  }, []); // Empty dependency array means this effect runs once on mount
 
   // Obtener el nombre de los días de la semana
   const daysOfWeek = ["L", "M", "X", "J", "V", "S", "D"];
 
-  // Generar los días del mes
-  const generateCalendarDays = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
+  // Generar los días de la semana
+  const generateWeekDays = (date) => {
+    // Obtener el primer día de la semana (lunes)
+    const startOfWeek = new Date(date);
+    startOfWeek.setDate(date.getDate() - ((date.getDay() + 6) % 7));
 
-    const firstDayOfMonth = new Date(year, month, 1);
-    const lastDayOfMonth = new Date(year, month + 1, 0);
+    // Obtener el último día de la semana (domingo)
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
 
-    // Calcular el inicio de la cuadrícula del calendario
-    const startOfCalendar = new Date(firstDayOfMonth);
-    startOfCalendar.setDate(
-      firstDayOfMonth.getDate() - (firstDayOfMonth.getDay() || 7) + 1,
-    );
-
-    // Calcular el fin de la cuadrícula del calendario
-    const endOfCalendar = new Date(lastDayOfMonth);
-    endOfCalendar.setDate(
-      lastDayOfMonth.getDate() + (7 - lastDayOfMonth.getDay() || 7),
-    );
-
-    // Generar un array de días
+    // Generar array de días de la semana
     let days = [];
-    let currentDay = new Date(startOfCalendar);
+    let currentDay = new Date(startOfWeek);
 
-    while (currentDay <= endOfCalendar) {
+    while (currentDay <= endOfWeek) {
       days.push(new Date(currentDay));
       currentDay.setDate(currentDay.getDate() + 1);
     }
@@ -67,15 +60,15 @@ const Calendar = () => {
     return days;
   };
 
-  const calendarDays = generateCalendarDays(currentDate);
+  const calendarDays = generateWeekDays(currentDate);
 
-  // Navegar entre meses
-  const navigateMonth = (direction) => {
+  // Navegar entre semanas
+  const navigateWeek = (direction) => {
     const newDate = new Date(currentDate);
-    newDate.setMonth(currentDate.getMonth() + direction);
+    newDate.setDate(currentDate.getDate() + (direction * 7));
     setCurrentDate(newDate);
-    setSelectedDate(null); // Limpiar la selección al cambiar de mes
-    setCalendarClasses([]); // Limpiar las clases mostradas al cambiar de mes
+    setSelectedDate(null); // Limpiar la selección al cambiar de semana
+    setCalendarClasses([]); // Limpiar las clases mostradas al cambiar de semana
   };
 
   // Manejar la selección de días
@@ -120,14 +113,13 @@ const Calendar = () => {
       <View className="bg-grey-200 p-4">
         {/* Encabezado del calendario */}
         <View className="flex-row justify-between">
-          <TouchableOpacity onPress={() => navigateMonth(-1)}>
+          <TouchableOpacity onPress={() => navigateWeek(-1)}>
             <Text className="text-5xl text-blue-900">{"<"}</Text>
           </TouchableOpacity>
           <Text className="text-2xl text-blue-900 font-bold">
-            {currentDate.toLocaleString("default", { month: "long" })}{" "}
-            {currentDate.getFullYear()}
+            {currentDate.toLocaleString("default", { month: "long" })} {currentDate.getDate()} 
           </Text>
-          <TouchableOpacity onPress={() => navigateMonth(1)}>
+          <TouchableOpacity onPress={() => navigateWeek(1)}>
             <Text className="text-5xl text-blue-900">{">"}</Text>
           </TouchableOpacity>
         </View>
@@ -154,20 +146,22 @@ const Calendar = () => {
 
       <View className="mx-6">
         {/* Mostrar las clases para el día seleccionado */}
-        <FlatList
-          data={calendarClasses}
-          keyExtractor={(item) => item.clase_id.toString()}
-          renderItem={({ item, index }) => (
-            <ClaseCard clase={item} index={index} />
-          )}
-          ListEmptyComponent={
-            <Text className="text-center font-bold">
-              {selectedDate
-                ? "No hay clases para este día."
-                : "Selecciona un día."}
-            </Text>
-          }
-        />
+          <FlatList
+            data={calendarClasses}
+            keyExtractor={(item) => item.clase_id.toString()}
+            renderItem={({ item, index }) => (
+              <View className="mb-2">
+                <ClaseCard clase={item} index={index} />
+              </View>
+            )}
+            ListEmptyComponent={
+              <Text className="text-center font-bold">
+                {selectedDate
+                  ? "No hay clases para este día."
+                  : "Selecciona un día."}
+              </Text>
+            }
+          />
       </View>
     </>
   );

@@ -15,10 +15,13 @@ const ClaseCard = ({ clase }) => {
             <Avatar id={clase.instructor_id} tamano="small"></Avatar>
             <View className="flex-1 ">
               <Text style={styles.claseTitle}>
-                {clase.clase_id} - {clase.nombre_actividad}
+                {/* {clase.clase_id} - */} {clase.nombre_actividad}
               </Text>
               <Text>
-                Fecha: {formattedDate} {formattedTime}
+                Fecha: {formattedDate}
+              </Text>
+              <Text style={styles.claseTitle}>
+                Hora: {formattedTime}
               </Text>
             </View>
             {/* <Text>Duración: {clase.duracion} min</Text> */}

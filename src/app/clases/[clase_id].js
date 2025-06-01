@@ -7,30 +7,28 @@ import ClaseDetail from "./../../components/ClaseDetail";
 
 export default function Detail() {
   const { clase_id } = useLocalSearchParams();
-  const [clase, setClase] = useState([]);
-  // Estado para almacenar las clases
+  const [clase, setClase] = useState(null);
 
   useEffect(() => {
-    // Fetch inicial para obtener todas las clases
-    //console.log("Usando effect id: " + clase_id);
     const fetchClase = async () => {
       try {
-        const response = await fetch(
-          `${API_URL}/api/clase/${clase_id}`,
-        );
+        const response = await fetch(`${API_URL}/api/clase/${clase_id}`);
         const data = await response.json();
-        //console.log("Data: ");
-        //console.log(data);
-        setClase(data);
+        // If data is an array, take the first element
+        const singleClase = Array.isArray(data) ? data[0] : data;
+        setClase(singleClase);
       } catch (error) {
-        console.error("Error fetching classes:", error);
+        console.error("Error fetching class:", error);
       }
     };
 
     fetchClase();
-  }, []);
+  }, [clase_id]);
 
-  // Función para renderizar los asistentes en la vista
+  if (!clase) {
+    return <View>Loading...</View>;
+  }
+
   return (
     <View>
       <ClaseDetail clase={clase} />
