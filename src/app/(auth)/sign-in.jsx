@@ -1,14 +1,27 @@
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  Alert,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { images } from "../../constants";
 import { CustomButton, FormField } from "./../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { API_URL, TOKEN_STORAGE_KEY, USER_STORAGE_KEY, ERROR_MESSAGES } from "../../config/constants";
+import {
+  API_URL,
+  TOKEN_STORAGE_KEY,
+  USER_STORAGE_KEY,
+  ERROR_MESSAGES,
+} from "../../config/constants";
 import { getCurrentUser } from "../../lib/funciones";
 
 const SignIn = () => {
@@ -33,9 +46,9 @@ const SignIn = () => {
   };
 
   const submit = async () => {
-    console.log('1. Submit started with form:', form);
+    console.log("1. Submit started with form:", form);
     if (!validateForm()) {
-      console.log('2. Form validation failed');
+      console.log("2. Form validation failed");
       return;
     }
 
@@ -43,7 +56,7 @@ const SignIn = () => {
     setErrors({});
 
     try {
-      console.log('3. Making API request to:', `${API_URL}/api/login`);
+      console.log("3. Making API request to:", `${API_URL}/api/login`);
       const response = await axios.post(
         `${API_URL}/api/login`,
         {
@@ -52,70 +65,75 @@ const SignIn = () => {
         },
         {
           timeout: 10000, // 10 second timeout
-        }
+        },
       );
-      console.log('4. API Response:', response.data);
+      console.log("4. API Response:", response.data);
 
       if (!response.data.success) {
-        console.log('5. Login failed:', response.data.message);
+        console.log("5. Login failed:", response.data.message);
         Alert.alert("Error", response.data.message || "Login failed");
         return;
       }
 
       const { token, user } = response.data;
-      console.log('6. Got token and user:', { 
+      console.log("6. Got token and user:", {
         token,
         tokenLength: token?.length,
         user,
-        userId: user?.id
+        userId: user?.id,
       });
 
       // Make sure token is properly formatted
-      const finalToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
-      console.log('7. Final token:', finalToken);
+      const finalToken = token.startsWith("Bearer ")
+        ? token
+        : `Bearer ${token}`;
+      console.log("7. Final token:", finalToken);
 
-      console.log('8. Storing token and user data...');
+      console.log("8. Storing token and user data...");
       await Promise.all([
         AsyncStorage.setItem(TOKEN_STORAGE_KEY, finalToken),
-        AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user))
+        AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user)),
       ]);
-      
-      console.log('9. Setting axios default header');
-      axios.defaults.headers.common['Authorization'] = finalToken;
-      console.log('10. Auth header set:', axios.defaults.headers.common['Authorization']);
-      
-      console.log('11. Getting full user profile');
+
+      console.log("9. Setting axios default header");
+      axios.defaults.headers.common["Authorization"] = finalToken;
+      console.log(
+        "10. Auth header set:",
+        axios.defaults.headers.common["Authorization"],
+      );
+
+      console.log("11. Getting full user profile");
       const userProfile = await getCurrentUser();
       if (userProfile) {
-        console.log('12. Setting user state with full profile');
+        console.log("12. Setting user state with full profile");
         setUser(userProfile);
         setIsLogged(true);
-        
-        console.log('13. Navigation to home');
+
+        console.log("13. Navigation to home");
         router.replace("/");
       } else {
-        console.log('ERROR: Could not get user profile');
+        console.log("ERROR: Could not get user profile");
         Alert.alert("Error", "Could not get user profile");
       }
-      
     } catch (error) {
-      console.log('ERROR in submit:', error.message);
+      console.log("ERROR in submit:", error.message);
       if (error.response) {
-        console.log('ERROR Status:', error.response.status);
-        console.log('ERROR Data:', error.response.data);
+        console.log("ERROR Status:", error.response.status);
+        console.log("ERROR Data:", error.response.data);
       } else if (error.request) {
-        console.log('ERROR Request:', error.request);
+        console.log("ERROR Request:", error.request);
       }
       let errorMessage = ERROR_MESSAGES.GENERAL_ERROR;
-      
+
       if (error.response) {
         // Server responded with error
-        errorMessage = error.response.data?.message || ERROR_MESSAGES.INVALID_CREDENTIALS;
+        errorMessage =
+          error.response.data?.message || ERROR_MESSAGES.INVALID_CREDENTIALS;
       } else if (error.request) {
         // No response received
         errorMessage = ERROR_MESSAGES.NETWORK_ERROR;
       }
-      
+
       Alert.alert("Error", errorMessage);
       console.error("Login error:", error);
     } finally {
@@ -124,22 +142,15 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FAFAFC" }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}>
-        <View style={{ alignItems: "center", marginVertical: 20 }}>
-          <Image
-            source={images.dreamart}
-            style={{
-              width: Dimensions.get("window").width * 0.7,
-              height: 100,
-              resizeMode: "contain",
-            }}
-          />
+    <SafeAreaView className="flex-1 bg-gray-600">
+      <ScrollView>
+        <View className=" ">
+          <Image source={images.dreamart} className="self-center " />
         </View>
 
-        <View style={{ padding: 20, gap: 20 }}>
+        <View className="px-5">
           <FormField
-            label="Username"
+            title="Username"
             placeholder="Enter your username"
             value={form.usuario}
             onChangeText={(text) => {
@@ -152,7 +163,7 @@ const SignIn = () => {
           />
 
           <FormField
-            label="Password"
+            title="Password"
             placeholder="Enter your password"
             value={form.contrasena}
             onChangeText={(text) => {
@@ -170,10 +181,19 @@ const SignIn = () => {
             disabled={isSubmitting}
             style={{ marginTop: 10 }}
           >
-            {isSubmitting && <ActivityIndicator color="white" style={{ marginLeft: 10 }} />}
+            {isSubmitting && (
+              <ActivityIndicator color="white" style={{ marginLeft: 10 }} />
+            )}
           </CustomButton>
 
-          <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              marginTop: 10,
+            }}
+            className="my-5"
+          >
             <Text>Don't have an account? </Text>
             <Link href="/sign-up" style={{ color: "#007AFF" }}>
               Sign up

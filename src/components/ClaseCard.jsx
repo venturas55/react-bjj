@@ -24,7 +24,7 @@ const ClaseCard = ({ clase }) => {
             {/* <Text>Duración: {clase.duracion} min</Text> */}
           </View>
           <View className="flex-row flex-wrap px-4 pb-4 bg-grey-400">
-            {clase.asistentes.map((asistente, index) => (
+            {clase.asistencias.map((asistente, index) => (
               <Avatar key={index} id={asistente.usuario_id} size="20" />
             ))}
           </View>

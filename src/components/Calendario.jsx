@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,8 +14,22 @@ import getFetch from "../hooks/getFetch.js";
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+  const [allClasses, setAllClasses] = useState([]); // Clases filtradas para la fecha seleccionada
   const [calendarClasses, setCalendarClasses] = useState([]); // Clases filtradas para la fecha seleccionada
-  const clases = getFetch("http://adriandeharo.es:7001/api/clases");
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const clases = await getFetch("http://adriandeharo.es:7001/api/clases");
+        console.log("CLASES: ", clases);
+        setAllClasses(clases);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      }
+    };
+
+    fetchClasses();
+  }, []); // Empty dependency array means this effect
 
   // Obtener el nombre de los días de la semana
   const daysOfWeek = ["L", "M", "X", "J", "V", "S", "D"];
@@ -68,7 +82,7 @@ const Calendar = () => {
     setSelectedDate(date);
 
     // Filtrar clases para la fecha seleccionada
-    const selectedClasses = clases.filter((clase) => {
+    const selectedClasses = allClasses.filter((clase) => {
       const claseDate = new Date(clase.fecha_hora);
       return (
         claseDate.getFullYear() === date.getFullYear() &&

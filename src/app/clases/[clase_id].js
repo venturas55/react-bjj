@@ -12,15 +12,15 @@ export default function Detail() {
 
   useEffect(() => {
     // Fetch inicial para obtener todas las clases
-    console.log("Usando effect id: " + clase_id);
+    //console.log("Usando effect id: " + clase_id);
     const fetchClase = async () => {
       try {
         const response = await fetch(
           `http://adriandeharo.es:7001/api/clase/${clase_id}`,
         );
         const data = await response.json();
-        console.log("Data: ");
-        console.log(data);
+        //console.log("Data: ");
+        //console.log(data);
         setClase(data);
       } catch (error) {
         console.error("Error fetching classes:", error);

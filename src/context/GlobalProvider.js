@@ -13,13 +13,13 @@ const GlobalProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const logout = async () => {
-    console.log('LOGOUT: Starting logout process');
+    //console.log('LOGOUT: Starting logout process');
     try {
       await AsyncStorage.multiRemove([TOKEN_STORAGE_KEY, USER_STORAGE_KEY]);
       setIsLogged(false);
       setUser(null);
       delete axios.defaults.headers.common["Authorization"];
-      console.log('LOGOUT: Completed successfully');
+      //console.log('LOGOUT: Completed successfully');
     } catch (error) {
       console.error("LOGOUT ERROR:", error);
     }
@@ -27,27 +27,27 @@ const GlobalProvider = ({ children }) => {
 
   const checkToken = async () => {
     try {
-      console.log('GP1. Starting checkToken');
+      //console.log('GP1. Starting checkToken');
       const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
-      console.log('GP2. Retrieved token:', token ? 'exists' : 'null');
+      //console.log('GP2. Retrieved token:', token ? 'exists' : 'null');
       
       if (token) {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        console.log('GP3. Set Authorization header, getting user data');
+        //console.log('GP3. Set Authorization header, getting user data');
         const userData = await getCurrentUser();
-        console.log('GP4. Got user data:', userData);
+        //console.log('GP4. Got user data:', userData);
         
         if (userData) {
-          console.log('GP5. Setting user and logged state');
+          //console.log('GP5. Setting user and logged state');
           setUser(userData);
           setIsLogged(true);
-          console.log('GP6. User state updated');
+          //console.log('GP6. User state updated');
         } else {
-          console.log('GP7. No user data, logging out');
+          //console.log('GP7. No user data, logging out');
           await logout();
         }
       } else {
-        console.log('GP8. No token found, logging out');
+        //console.log('GP8. No token found, logging out');
         await logout();
       }
     } catch (error) {

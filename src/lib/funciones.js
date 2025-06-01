@@ -52,32 +52,32 @@ export async function getAccount() {
 // Get Current User
 export async function getCurrentUser() {
   try {
-    console.log('GCU1. Getting current user');
+    //console.log('GCU1. Getting current user');
     const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
-    console.log('GCU2. Token from storage:', token);
+    //console.log('GCU2. Token from storage:', token);
     
     if (!token) {
-      console.log('GCU3. No token found');
+      //console.log('GCU3. No token found');
       return null;
     }
 
     // Get stored user data to get the ID
     const storedUserData = await AsyncStorage.getItem(USER_STORAGE_KEY);
     if (!storedUserData) {
-      console.log('GCU4. No stored user data found');
+      //console.log('GCU4. No stored user data found');
       return null;
     }
 
     const userData = JSON.parse(storedUserData);
-    console.log('GCU5. Stored user data:', userData);
-    console.log('GCU5.1. User ID:', userData.id);
+    //console.log('GCU5. Stored user data:', userData);
+    //console.log('GCU5.1. User ID:', userData.id);
 
     // Make sure the token has the Bearer prefix
     const bearerToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
-    console.log('GCU6. Using Authorization header:', bearerToken);
+    //console.log('GCU6. Using Authorization header:', bearerToken);
     
     const url = `${API_URL}/api/usuarios/${userData.id}`;
-    console.log('GCU7. Making request to:', url);
+    //console.log('GCU7. Making request to:', url);
     
     // Set up axios config with Bearer token
     const config = {
@@ -86,21 +86,21 @@ export async function getCurrentUser() {
         'Content-Type': 'application/json'
       }
     };
-    console.log('GCU7.1. Request config:', JSON.stringify(config, null, 2));
+    //console.log('GCU7.1. Request config:', JSON.stringify(config, null, 2));
     
     // Set the default header for all future requests
     axios.defaults.headers.common['Authorization'] = bearerToken;
     
     const response = await axios.get(url, config);
-    console.log('GCU8. Response received:', response.data);
+    //console.log('GCU8. Response received:', response.data);
     
     if (response.data) {
-      console.log('GCU9. User data found in response');
+        //console.log('GCU9. User data found in response');
       const userWithAsistencias = response.data;
       await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithAsistencias));
       return userWithAsistencias;
     } else {
-      console.log('GCU10. No user data in response');
+      //console.log('GCU10. No user data in response');
       return null;
     }
   } catch (error) {
