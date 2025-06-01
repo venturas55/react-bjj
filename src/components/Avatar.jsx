@@ -1,4 +1,5 @@
 import { Image, StyleSheet } from "react-native";
+import { API_URL } from "../config/constants";
 
 const Avatar = ({ id, size }) => {
   if (size === undefined) size = 40;
@@ -15,7 +16,7 @@ const Avatar = ({ id, size }) => {
       <Image
         style={styles.image}
         source={{
-          uri: "http://adriandeharo.es:7001/api/usuario/foto/" + id,
+          uri: `${API_URL}/api/usuario/foto/${id}`,
         }}
       />
     </>

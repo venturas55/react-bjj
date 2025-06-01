@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import postFetch from "../../../hooks/postFetch";
+import { API_URL } from "../../../config/constants";
 
 const EditActividad = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const EditActividad = () => {
     };
     try {
       const response = await postFetch(
-        `http://adriandeharo.es:7001/api/actividades/edit/`,
+        `${API_URL}/api/actividades/edit/`,
         jsonObject,
       );
       console.log(response);

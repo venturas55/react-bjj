@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View, TextInput, Button, StyleSheet } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "../config/constants";
 
 const styles = StyleSheet.create({
   container: {
@@ -37,7 +38,7 @@ export default function LogInPage() {
   const onSubmit = async (data) => {
     const { usuario, contrasena } = data;
     try {
-      const response = await fetch("http://adriandeharo.es:7001/api/login", {
+      const response = await fetch(`${API_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -5,6 +5,7 @@ import getFetch from "../hooks/getFetch";
 import AsistenciaItem from "./AsistenciaItem";
 import { format } from "date-fns";
 import BeltComponent from "./BeltComponent";
+import { API_URL } from "../config/constants";
 
 const Asistencias = () => {
   const { user } = useGlobalContext();
@@ -22,7 +23,7 @@ const Asistencias = () => {
           throw new Error("User ID not found");
         }
 
-        const data = await getFetch(`http://adriandeharo.es:7001/api/usuario/${user.id}`);
+        const data = await getFetch(`${API_URL}/api/usuario/${user.id}`);
         if (data) {
           setUserData(data);
         }

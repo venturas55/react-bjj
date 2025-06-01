@@ -4,6 +4,7 @@ import { View, Text, FlatList, Pressable, ActivityIndicator } from "react-native
 import { Link } from "expo-router";
 import axios from "axios";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { API_URL } from "../../config/constants";
 
 const ListActividad = () => {
   const [actividades, setActividades] = useState([]);
@@ -20,7 +21,7 @@ const ListActividad = () => {
         throw new Error("No hay token de autenticación");
       }
 
-      const response = await axios.get("http://adriandeharo.es:7001/api/actividades/list", {
+      const response = await axios.get(`${API_URL}/api/actividades/list`, {
         headers: {
           'Authorization': `Bearer ${user.token}`,
           'Accept': 'application/json',
@@ -116,7 +117,7 @@ const ListActividad = () => {
                   style: "destructive",
                   onPress: async () => {
                     try {
-                      await axios.delete(`http://adriandeharo.es:7001/api/actividades/${item.actividad_id}`, {
+                      await axios.delete(`${API_URL}/api/actividades/${item.actividad_id}`, {
                         headers: {
                           Authorization: `Bearer ${user?.token}`
                         }

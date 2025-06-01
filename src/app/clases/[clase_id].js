@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "expo-router";
 import { View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-
+import { API_URL } from "../../config/constants";
 import ClaseDetail from "./../../components/ClaseDetail";
 
 export default function Detail() {
@@ -16,7 +16,7 @@ export default function Detail() {
     const fetchClase = async () => {
       try {
         const response = await fetch(
-          `http://adriandeharo.es:7001/api/clase/${clase_id}`,
+          `${API_URL}/api/clase/${clase_id}`,
         );
         const data = await response.json();
         //console.log("Data: ");

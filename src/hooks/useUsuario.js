@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_URL } from "../config/constants";
 
 const useUsuario = (id) => {
   const [usuario, setUsuario] = useState(null); // Estado para almacenar las clases
@@ -6,7 +7,7 @@ const useUsuario = (id) => {
   const fetchUsuario = async () => {
     // eslint-disable-next-line prettier/prettier
     const response = await globalThis.fetch(
-      "http://adriandeharo.es:7001/api/usuarios/1",
+      `${API_URL}/api/usuarios/1`,
     );
     const json = await response.json();
     setUsuario(json);

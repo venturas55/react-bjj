@@ -7,6 +7,7 @@ import getFetch from "../hooks/getFetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomButton from "./CustomButton";
 import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from "../config/constants";
+import { API_URL } from "../config/constants";
 
 const Perfil = () => {
   const { user, isLogged, setIsLogged, setUser, loading } = useGlobalContext();
@@ -15,7 +16,7 @@ const Perfil = () => {
     const fetchUserData = async () => {
       try {
         if (user && user.id) {
-          const data = await getFetch("http://adriandeharo.es:7001/api/usuario/" + user.id);
+          const data = await getFetch(`${API_URL}/api/usuario/${user.id}`);
           if (data) {
             setUser(data);
           }

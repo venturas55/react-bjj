@@ -2,11 +2,12 @@
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { Link } from "expo-router";
 import getFetch from "../../hooks/getFetch";
+import { API_URL } from "../../config/constants";
 
 // Suponiendo que 'clases' es un array que contiene la información de las clases.
 const ClaseList = () => {
   //const [clases, setClases] = useState(null);
-  const clases = getFetch("http://adriandeharo.es:7001/api/clases/list");
+  const clases = getFetch(`${API_URL}/api/clases/list`);
   //useEffect(() => {}, []);
 
   const handleJoinClase = (claseId) => {

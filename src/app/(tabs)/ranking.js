@@ -4,6 +4,7 @@ import getFetch from "./../../hooks/getFetch";
 import Avatar from "./../../components/Avatar";
 import { format } from "date-fns";
 import BeltComponent from "./../../components/BeltComponent";
+import { API_URL } from "../../config/constants";
 
 const Ranking = () => {
   const [rankingData, setRankingData] = useState(null);
@@ -15,7 +16,7 @@ const Ranking = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await getFetch("http://adriandeharo.es:7001/api/asistencias");
+        const response = await getFetch(`${API_URL}/api/asistencias`);
         if (response) {
           setRankingData(response);
         }

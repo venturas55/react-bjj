@@ -1,4 +1,4 @@
-export const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://adriandeharo.es:7001';
+export const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://152.228.133.198:7001';
 export const TOKEN_STORAGE_KEY = '@auth_token';
 export const USER_STORAGE_KEY = '@user_data';
 

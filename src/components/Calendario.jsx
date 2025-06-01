@@ -10,6 +10,7 @@ import {
 import ClaseCard from "./ClaseCard"; // Import the AnimatedClaseCard component
 import theme from "./theme";
 import getFetch from "../hooks/getFetch.js";
+import { API_URL } from "../config/constants";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -20,7 +21,7 @@ const Calendar = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const clases = await getFetch("http://adriandeharo.es:7001/api/clases");
+        const clases = await getFetch(`${API_URL}/api/clases`);
         console.log("CLASES: ", clases);
         setAllClasses(clases);
       } catch (error) {
